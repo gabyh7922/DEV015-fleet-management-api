@@ -1,42 +1,6 @@
-import os
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
+from init import app
+from models import taxis
 
-#load_dotenv()
-# Instanciamos Flask
-app = Flask(__name__) 
-
-# Configuración correcta de la base de datos
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI', '')
-
-# Desactivar el rastreo de modificaciones (opcional, pero recomendable)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Instanciamos SQLAlchemy
-db = SQLAlchemy(app)
-
-# Modelo de Taxi
-class taxis(db.Model):
-    """Modelo para la tabla 'taxis'
-    - id: número único identificador para taxi
-    - plate: placa del taxi (única)
-    """
-    __tablename__ = 'taxis'
-
-    id = db.Column(db.Integer, primary_key=True)
-    plate = db.Column(db.String(10), unique=True, nullable=False)
-
-    # Método to_dict para transformar el objeto en un diccionario
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "plate": self.plate
-        }
-
-# Crear las tablas en la base de datos
-with app.app_context():
-    db.create_all()
 
 # Definir las rutas
 @app.route('/')
